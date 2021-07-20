@@ -322,6 +322,7 @@ namespace PortableDevices
                 {
                     var buffer = new byte[1024];
                     int bytesRead;
+                    Console.Write("Progress:     ");
                     do
                     {
                         sourceStream.Read(buffer, 1024, new IntPtr(&bytesRead));
@@ -332,7 +333,8 @@ namespace PortableDevices
                         if (PCt != lPCt)
                         {
                             lPCt = PCt;
-                            Console.WriteLine("Progress: " + lPCt);
+
+                            Console.Write("\b\b\b\b\b{0,3} %", lPCt);
                         }
                     } while (bytesRead > 0);
                 }
