@@ -1,6 +1,7 @@
 ﻿using PortableDeviceApiLib;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 /**  
@@ -102,12 +103,27 @@ namespace PortableDevices
             do
             {
                 Console.WriteLine($"-------------------------------------");
-                Console.WriteLine("Select file by number ");
+                Console.WriteLine("Select file by number to open it (and press enter)");
+                Console.WriteLine("Enter u to upload a test file to this folder ");
                 Console.WriteLine("Press x key to exit to device list");
                 cmd = Console.ReadLine();
                 int selectedItem = 0;
 
-                if (int.TryParse(cmd, out selectedItem)
+                if (cmd == "u")
+                {
+                    Console.WriteLine($"-------------------------------------");
+                    Console.WriteLine("Enter file path to upload from this PC.");
+                    var path = Console.ReadLine();
+                    if (File.Exists(path))
+                    {
+                        device.TransferContentToDevice(folder, path);
+                    }
+                    else
+                    {
+                        Console.WriteLine("File entered not found on this PC");
+                    }
+                }
+                else if (int.TryParse(cmd, out selectedItem)
                     && selectedItem <= folder.Files.Count)
                 {
                     var fileItem = folder.Files[selectedItem - 1];
@@ -164,22 +180,6 @@ namespace PortableDevices
                 deviceNo++;
                 Console.WriteLine();
                 Console.WriteLine($"{deviceNo}: {device.Name} from {device.Manufacturer}");
-
-
-                // Copy folder to device from pc.
-                //error = copyToDevice (device);
-                //if (String.IsNullOrEmpty(error))
-                //{
-                //    error = @"Copied folder C:\Test to Phone\Android\data\test";
-                //}
-                //Console.WriteLine(error);
-
-                //// Copy folder back to pc from device.
-                //error = copyFromDevice(device);
-                //if (String.IsNullOrEmpty(error))
-                //{
-                //    error = @"Copied folder Phone\Android\data\test to c:\Test\CopiedBackfromPhone";
-                //}
             }
         }
 
