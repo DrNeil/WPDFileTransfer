@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 /**  
  * Create a dir on your c: drive named Text "C:\Test"
@@ -95,9 +96,7 @@ namespace PortableDevices
             
             // list all contents in the root - 1 level in 
             //see GetFiles method to enumerate everything in the device 
-            int fileNo = 0;
-
-            ListFilesInFolder(device, ref folder, ref fileNo);
+            ListFilesInFolder(device, ref folder);
 
             string cmd;
             do
@@ -116,12 +115,14 @@ namespace PortableDevices
                     var path = Console.ReadLine();
                     if (File.Exists(path))
                     {
-                        device.TransferContentToDevice(folder, path);
+                        Console.Write("Copy progress: ");
+                        device.TransferContentToDevice(folder, path, ProgressUpdated);
                     }
                     else
                     {
                         Console.WriteLine("File entered not found on this PC");
                     }
+                    ListFilesInFolder(device, ref folder);
                 }
                 else if (int.TryParse(cmd, out selectedItem)
                     && selectedItem <= folder.Files.Count)
@@ -129,19 +130,18 @@ namespace PortableDevices
                     var fileItem = folder.Files[selectedItem - 1];
                     if (fileItem is PortableDeviceFolder childFolder)
                     {
-                        fileNo = 0;
-                        ListFilesInFolder(device, ref childFolder, ref fileNo);
+                        ListFilesInFolder(device, ref childFolder);
                         folder = childFolder;
                     }
                     else if (fileItem is PortableDeviceFile childFile)
                     {
                         var store = System.IO.Path.GetTempPath();
-                        device.TransferContentFromDevice(childFile, store, childFile.Name);
+                        Console.Write("Copy progress: ");
+                        Task.Factory.StartNew(()=> { device.TransferContentFromDevice(childFile, store, childFile.Name, ProgressUpdated); }).Wait();
                         // open in default application
                         var path = System.IO.Path.Combine(store, childFile.Name);
                         Process.Start(path);
-                        fileNo = 0;
-                        ListFilesInFolder(device, ref folder, ref fileNo);
+                        ListFilesInFolder(device, ref folder);
                     }
                 }
             }
@@ -149,8 +149,14 @@ namespace PortableDevices
             
         }
 
-        private static void ListFilesInFolder(PortableDevice device, ref PortableDeviceFolder folder, ref int fileNo)
+        public static void ProgressUpdated(int percent)
         {
+            Console.Write(".");
+        }
+
+        private static void ListFilesInFolder(PortableDevice device, ref PortableDeviceFolder folder)
+        {
+            int fileNo = 0;
             device.Connect();
             IPortableDeviceContent content = device.getContents();
             if (null == folder)
@@ -158,6 +164,7 @@ namespace PortableDevices
                 folder = device.Root;
             }
             PortableDeviceFolder.EnumerateContents(ref content, folder);
+            Console.WriteLine($"-------------------------------------");
             Console.WriteLine();
             Console.WriteLine($"{folder.Name} contents:");
             foreach (var fileItem in folder.Files)

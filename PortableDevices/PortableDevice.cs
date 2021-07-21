@@ -280,10 +280,11 @@ namespace PortableDevices
             Disconnect();
         }
 
+        public delegate void UpdateProgress(int percent);
         /**
          * Copy To PC
          */
-        public void TransferContentFromDevice(PortableDeviceFile file, string saveToPath, String fileName)
+        public void TransferContentFromDevice(PortableDeviceFile file, string saveToPath, String fileName, UpdateProgress updateProgress = null)
         {
             FileStream targetStream = null;
 
@@ -317,24 +318,28 @@ namespace PortableDevices
                 // Get the total size.
                 long length = file.size;
                 long written = 0;
-                long lPCt = 0;
+                int lPCt = 0;
                 unsafe
                 {
                     var buffer = new byte[1024];
                     int bytesRead;
-                    Console.Write("Progress:     ");
+                    //Console.Write("Progress:     ");
                     do
                     {
                         sourceStream.Read(buffer, 1024, new IntPtr(&bytesRead));
                         targetStream.Write(buffer, 0, bytesRead);
 
                         written += 1024;
-                        long PCt = length > 0 ? (100 * written) / length : 100;
-                        if (PCt != lPCt)
+                        if (null != updateProgress)
                         {
-                            lPCt = PCt;
+                            long PCt = length > 0 ? (100 * written) / length : 100;
+                            if (PCt != lPCt)
+                            {
+                                lPCt = (int)PCt;
 
-                            Console.Write("\b\b\b\b\b{0,3} %", lPCt);
+                                //Console.Write("\b\b\b\b\b{0,3} %", lPCt - 1);
+                                updateProgress(lPCt);
+                            }
                         }
                     } while (bytesRead > 0);
                 }
@@ -354,7 +359,7 @@ namespace PortableDevices
         /**
          * Copy To portable device
          */
-        public void TransferContentToDevice (PortableDeviceFolder parentFolder, string filePath)
+        public void TransferContentToDevice (PortableDeviceFolder parentFolder, string filePath, UpdateProgress updateProgress = null)
         {
             PortableDeviceApiLib.IStream tempStream = null;
             System.Runtime.InteropServices.ComTypes.IStream targetStream = null;
@@ -384,7 +389,7 @@ namespace PortableDevices
 
                 long length = new System.IO.FileInfo(filePath).Length;
                 long written = 0;
-                long lPCt = 0;
+                int lPCt = 0;
 
                 using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
@@ -396,12 +401,15 @@ namespace PortableDevices
                         IntPtr PCbWritten = IntPtr.Zero;
                         targetStream.Write(buffer, bytesRead, PCbWritten);
 
-                        written += bytesRead;
-                        long PCt = length > 0 ? (100 * written) / length : 100;
-                        if (PCt != lPCt)
+                        if (null != updateProgress)
                         {
-                            lPCt = PCt;
-                            Console.WriteLine("Progress: " + lPCt);
+                            written += bytesRead;
+                            long PCt = length > 0 ? (100 * written) / length : 100;
+                            if (PCt != lPCt)
+                            {
+                                lPCt = (int)PCt;
+                                updateProgress(lPCt);
+                            }
                         }
                     } while (bytesRead > 0);
                 }
