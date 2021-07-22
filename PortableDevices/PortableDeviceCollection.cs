@@ -46,6 +46,17 @@ namespace PortableDevices
             return result;
         }
 
+        protected virtual void AddDevice(PortableDevice portableDevice)
+        {
+            this.Add(portableDevice);
+        }
+
+        protected virtual void RemoveDevice(PortableDevice removedDevice)
+        {
+            Remove(removedDevice);
+        }
+
+
         public void Refresh()
         {
             try { 
@@ -71,14 +82,14 @@ namespace PortableDevices
                     // check if the device is already in the collection before adding it (again)
                     if (!this.Any(d => d.DeviceId == deviceId))
                     {
-                        Add(new PortableDevice(deviceId, friendlyname, manufacturer, description));
+                        AddDevice(new PortableDevice(deviceId, friendlyname, manufacturer, description));
                     }
                 }
                 //get a collection of devices removed 
                 var removedDevices = this.Where(d => !devicesFound.Contains(d.DeviceId)).ToArray();
                 foreach(var removedDevice in removedDevices)
                 {
-                    Remove(removedDevice);
+                    RemoveDevice(removedDevice);
                 }
                 // free the memory allocated for the device ID strings
                 if (ptr != null)
@@ -93,6 +104,7 @@ namespace PortableDevices
             {
                 Console.WriteLine (ex.Message);
             }
-}
+        }
+
     }
 }

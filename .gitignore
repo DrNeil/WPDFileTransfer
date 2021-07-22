@@ -1,3 +1,6 @@
 .vs/
 PortableDevices/bin/
 PortableDevices/obj/
+/PortableDevices.WPF/bin/Debug/net5.0-windows
+/PortableDevices.WPF/obj
+/PortableDevices.WPF/PortableDevices.WPF.csproj.user
