@@ -125,11 +125,36 @@ namespace PortableDevices.WPF
             }
         }
 
+        private void Upload_Click(object sender, RoutedEventArgs e)
+        {
+            if (null != CurrentFolder)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    SelectedDevice.TransferContentToDevice(CurrentFolder, openFileDialog.FileName);
+                    UpdateFilesInCurrentFolder();
+                }
+            }
+        }
+        
         private void UpdateFilesInCurrentFolder()
         {
             SelectedDevice.Connect();
             SelectedDevice.GetFiles(CurrentFolder);
-            folderHistory.Push(CurrentFolder);
+            if (null != CurrentFolder)
+            {
+                if (folderHistory.Any()
+                    && folderHistory.Peek() == CurrentFolder)
+                {
+                    CurrentFolder = null;
+                    CurrentFolder = folderHistory.Peek();
+                }
+                else
+                {
+                    folderHistory.Push(CurrentFolder);
+                }
+            }
         }
 
     }

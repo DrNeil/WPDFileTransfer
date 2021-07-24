@@ -51,7 +51,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button Content=".." FontSize="14" Width="30" Height="30" Click="BackButton_Click"/>
+                    <Button Content=".." FontSize="14" Width="30" Height="20" VerticalAlignment="Bottom" Click="BackButton_Click"/>
                     <Label Content="{Binding Path=CurrentFolder.Name}" />
                 </StackPanel>
                 <ListView Grid.Row="1" ItemsSource="{Binding Path=CurrentFolder.Files}" VerticalAlignment="Stretch">
@@ -68,6 +68,9 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Button Content="Upload file to this folder" FontSize="14" Click="Upload_Click"/>
             </Grid>
         </Grid>
     </Grid>
