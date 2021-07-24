@@ -78,7 +78,7 @@ namespace PortableDevices
         /**
          * Get the contents of the device.
          */
-        public IPortableDeviceContent getContents()
+        public IPortableDeviceContent GetContents()
         {
             IPortableDeviceContent contents = null;
 
@@ -105,6 +105,16 @@ namespace PortableDevices
             {
                 return _root;
             }
+        }
+
+        public void GetFiles(PortableDeviceFolder folder)
+        {
+            IPortableDeviceContent content = GetContents();
+            if (null == folder)
+            {
+                folder = Root;
+            }
+            PortableDeviceFolder.EnumerateContents(ref content, folder);
         }
 
 
@@ -182,7 +192,7 @@ namespace PortableDevices
                     }
 
                     // Retrieve the properties of the device
-                    IPortableDeviceContent content = getContents();
+                    IPortableDeviceContent content = GetContents();
                     IPortableDeviceProperties properties;
                     content.Properties(out properties);
 
@@ -260,7 +270,7 @@ namespace PortableDevices
                 // make sure that we are not holding on to a file.
                 DisconnectConnect();
 
-                IPortableDeviceContent content = getContents();
+                IPortableDeviceContent content = GetContents();
 
                 var variant = new PortableDeviceApiLib.tag_inner_PROPVARIANT();
                 StringToPropVariant(file.Id, out variant);
@@ -296,7 +306,7 @@ namespace PortableDevices
                 // Make sure that the target directory exists.
                 System.IO.Directory.CreateDirectory(saveToPath);
 
-                IPortableDeviceContent content = getContents();
+                IPortableDeviceContent content = GetContents();
 
                 IPortableDeviceResources resources;
                 content.Transfer(out resources);
@@ -375,7 +385,7 @@ namespace PortableDevices
 
                 string parentObjectId = parentFolder.Id;
 
-                IPortableDeviceContent content = getContents();
+                IPortableDeviceContent content = GetContents();
                 IPortableDeviceValues values = GetRequiredPropertiesForContentType(filePath, parentObjectId);
 
                 uint optimalTransferSizeBytes = 0;

@@ -158,7 +158,7 @@ namespace PortableDevices
         {
             int fileNo = 0;
             device.Connect();
-            IPortableDeviceContent content = device.getContents();
+            IPortableDeviceContent content = device.GetContents();
             if (null == folder)
             {
                 folder = device.Root;

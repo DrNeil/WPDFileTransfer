@@ -43,6 +43,19 @@ namespace PortableDevices.WPF
             DependencyProperty.Register("SelectedDevice", typeof(PortableDevice), typeof(MainWindow), new PropertyMetadata(null));
 
 
+
+        public PortableDeviceFolder CurrentFolder
+        {
+            get { return (PortableDeviceFolder)GetValue(CurrentFolderProperty); }
+            set { SetValue(CurrentFolderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CurrentFolder.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CurrentFolderProperty =
+            DependencyProperty.Register("CurrentFolder", typeof(PortableDeviceFolder), typeof(MainWindow), new PropertyMetadata(null));
+
+
+
         public MainWindow()
         {
             Devices = new ObservablePortableDeviceCollection();
@@ -66,6 +79,33 @@ namespace PortableDevices.WPF
             UpdateDevices();
         }
 
-        
+        private void DevicesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (null != SelectedDevice)
+            {
+                CurrentFolder = SelectedDevice.Root;
+                SelectedDevice.Connect();
+                SelectedDevice.GetFiles(CurrentFolder);
+            }
+        }
+
+        protected void FileDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            PortableDeviceObject selected = ((ListViewItem)sender).Content as PortableDeviceObject;
+            if (selected is PortableDeviceFolder selectedFolder)
+            {
+                CurrentFolder = selectedFolder;
+                SelectedDevice.Connect();
+                SelectedDevice.GetFiles(CurrentFolder);
+            }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (null != CurrentFolder)
+            {
+                
+            }
+        }
     }
 }

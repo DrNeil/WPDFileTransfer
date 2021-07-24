@@ -32,7 +32,7 @@ namespace PortableDevices
                 result = FindDir (folderName);
                 if (null == result)
                 {
-                    IPortableDeviceContent content = device.getContents();
+                    IPortableDeviceContent content = device.GetContents();
 
                     // Get the properties of the object
                     IPortableDeviceProperties properties;
@@ -259,7 +259,7 @@ namespace PortableDevices
         /**
          * Enumerate the contents of the folder.
          */
-        internal static void EnumerateContents(ref IPortableDeviceContent content, PortableDeviceFolder parent)
+        public static void EnumerateContents(ref IPortableDeviceContent content, PortableDeviceFolder parent)
         {
             parent.Files.Clear();
             // Get the properties of the object

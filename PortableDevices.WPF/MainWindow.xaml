@@ -19,7 +19,9 @@
             </Grid.RowDefinitions>
             <Label Content="Devices Found" HorizontalAlignment="Center" Grid.Row="0"/>
 
-            <ListView x:Name="DevicesList" Grid.Row="1" ItemsSource="{Binding Path=Devices}" SelectedItem="{Binding Path=SelectedDevice}">
+            <ListView x:Name="DevicesList" Grid.Row="1" ItemsSource="{Binding Path=Devices}" 
+                      SelectedItem="{Binding Path=SelectedDevice}"
+                      SelectionChanged="DevicesList_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -43,6 +45,30 @@
                 <Label Content="{Binding Path=SelectedDevice.Description}" />
                 <Label Content="{Binding Path=SelectedDevice.Manufacturer}" />
             </StackPanel>
+            <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Button Content=".." FontSize="14" Width="30" Height="30" Click="BackButton_Click"/>
+                    <Label Content="{Binding Path=CurrentFolder.Name}" />
+                </StackPanel>
+                <ListView Grid.Row="1" ItemsSource="{Binding Path=CurrentFolder.Files}" VerticalAlignment="Stretch">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <EventSetter Event="MouseDoubleClick" Handler="FileDoubleClick" />
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
