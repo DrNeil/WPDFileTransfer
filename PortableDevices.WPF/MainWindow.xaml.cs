@@ -54,10 +54,12 @@ namespace PortableDevices.WPF
         public static readonly DependencyProperty CurrentFolderProperty =
             DependencyProperty.Register("CurrentFolder", typeof(PortableDeviceFolder), typeof(MainWindow), new PropertyMetadata(null));
 
+        private Stack<PortableDeviceFolder> folderHistory;
 
 
         public MainWindow()
         {
+            folderHistory = new Stack<PortableDeviceFolder>();
             Devices = new ObservablePortableDeviceCollection();
             DataContext = this;
             InitializeComponent();
@@ -83,9 +85,9 @@ namespace PortableDevices.WPF
         {
             if (null != SelectedDevice)
             {
+                folderHistory.Clear();
                 CurrentFolder = SelectedDevice.Root;
-                SelectedDevice.Connect();
-                SelectedDevice.GetFiles(CurrentFolder);
+                UpdateFilesInCurrentFolder();
             }
         }
 
@@ -95,17 +97,27 @@ namespace PortableDevices.WPF
             if (selected is PortableDeviceFolder selectedFolder)
             {
                 CurrentFolder = selectedFolder;
-                SelectedDevice.Connect();
-                SelectedDevice.GetFiles(CurrentFolder);
+                UpdateFilesInCurrentFolder();
             }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (null != CurrentFolder)
+            if (null != folderHistory
+                && folderHistory.Count > 1)
             {
-                
+                CurrentFolder = folderHistory.Pop();
+                CurrentFolder = folderHistory.Pop();
+                UpdateFilesInCurrentFolder();
             }
         }
+
+        private void UpdateFilesInCurrentFolder()
+        {
+            SelectedDevice.Connect();
+            SelectedDevice.GetFiles(CurrentFolder);
+            folderHistory.Push(CurrentFolder);
+        }
+
     }
 }
