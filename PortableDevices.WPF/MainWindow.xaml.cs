@@ -31,6 +31,18 @@ namespace PortableDevices.WPF
             DependencyProperty.Register("Devices", typeof(ObservablePortableDeviceCollection), typeof(MainWindow), new PropertyMetadata(null));
 
 
+
+        public PortableDevice SelectedDevice
+        {
+            get { return (PortableDevice)GetValue(SelectedDeviceProperty); }
+            set { SetValue(SelectedDeviceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectedDevice.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedDeviceProperty =
+            DependencyProperty.Register("SelectedDevice", typeof(PortableDevice), typeof(MainWindow), new PropertyMetadata(null));
+
+
         public MainWindow()
         {
             Devices = new ObservablePortableDeviceCollection();
@@ -53,5 +65,7 @@ namespace PortableDevices.WPF
         {
             UpdateDevices();
         }
+
+        
     }
 }

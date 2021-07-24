@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
             <Label Content="Devices Found" HorizontalAlignment="Center" Grid.Row="0"/>
 
-            <ListView x:Name="DevicesList" Grid.Row="1" ItemsSource="{Binding Path=Devices}">
+            <ListView x:Name="DevicesList" Grid.Row="1" ItemsSource="{Binding Path=Devices}" SelectedItem="{Binding Path=SelectedDevice}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -31,6 +31,18 @@
             </ListView>
 
             <Button x:Name="RefreshButton" Grid.Row="2" Content="Refresh" Click="RefreshButton_Click" />
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="{Binding Path=SelectedDevice.Name}" />
+                <Label Content="{Binding Path=SelectedDevice.Description}" />
+                <Label Content="{Binding Path=SelectedDevice.Manufacturer}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
