@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,6 +100,17 @@ namespace PortableDevices.WPF
             {
                 CurrentFolder = selectedFolder;
                 UpdateFilesInCurrentFolder();
+            }
+            else if (selected is PortableDeviceFile selectedFile)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = selectedFile.Name;
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    var folder = System.IO.Path.GetDirectoryName(saveFileDialog.FileName);
+                    var file = System.IO.Path.GetFileName(saveFileDialog.FileName);
+                    SelectedDevice.TransferContentFromDevice(selectedFile, folder, file);
+                }
             }
         }
 
