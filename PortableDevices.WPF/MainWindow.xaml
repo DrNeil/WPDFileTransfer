@@ -54,7 +54,7 @@
                     <Button Content=".." FontSize="14" Width="30" Height="20" VerticalAlignment="Bottom" Click="BackButton_Click"/>
                     <Label Content="{Binding Path=CurrentFolder.Name}" />
                 </StackPanel>
-                <ListView Grid.Row="1" ItemsSource="{Binding Path=CurrentFolder.Files}" VerticalAlignment="Stretch">
+                <ListView x:Name="FileListView" Grid.Row="1" ItemsSource="{Binding Path=CurrentFolder.Files}" VerticalAlignment="Stretch">
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <EventSetter Event="MouseDoubleClick" Handler="FileDoubleClick" />
