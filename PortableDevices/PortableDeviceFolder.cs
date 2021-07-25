@@ -1,6 +1,7 @@
 ﻿using PortableDeviceApiLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 // Portable Device Folder
@@ -250,7 +251,7 @@ namespace PortableDevices
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Debug.WriteLine(ex.Message);
                 }
             }
             return result;

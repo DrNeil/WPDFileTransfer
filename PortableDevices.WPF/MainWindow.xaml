@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PortableDevices.WPF"
+        xmlns:pd="clr-namespace:PortableDevices;assembly=PortableDevices"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Portable Devices" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,7 +19,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <Label Content="Devices Found" HorizontalAlignment="Center" Grid.Row="0"/>
+            <Label Content="Devices" FontWeight="Bold" Grid.Row="0"/>
 
             <ListView x:Name="DevicesList" Grid.Row="1" ItemsSource="{Binding Path=Devices}" 
                       SelectedItem="{Binding Path=SelectedDevice}"
@@ -40,33 +42,39 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Label Content="{Binding Path=SelectedDevice.Name}" />
+            <StackPanel Grid.Row="0" Orientation="Horizontal" >
+                <Label Content="{Binding Path=SelectedDevice.Name}" FontWeight="Bold" />
                 <Label Content="{Binding Path=SelectedDevice.Description}" />
-                <Label Content="{Binding Path=SelectedDevice.Manufacturer}" />
+                <Label Content="{Binding Path=SelectedDevice.Manufacturer}" FontWeight="Bold" />
             </StackPanel>
             <Grid Grid.Row="1" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button Content=".." FontSize="14" Width="30" Height="20" VerticalAlignment="Bottom" Click="BackButton_Click"/>
-                    <Label Content="{Binding Path=CurrentFolder.Name}" />
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Content=" .. " FontSize="14" Width="30" Height="20" Click="BackButton_Click" Background="White"/>
+                    <Image Source="/resources/folder.png" Height="20" Width="20" Margin="10,0,5,0" />
+                    <Label Content="{Binding Path=CurrentFolder.Name}" FontWeight="Bold" />
                 </StackPanel>
                 <ListView x:Name="FileListView" Grid.Row="1" ItemsSource="{Binding Path=CurrentFolder.Files}" VerticalAlignment="Stretch">
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <EventSetter Event="MouseDoubleClick" Handler="FileDoubleClick" />
                         </Style>
-                    </ListView.Resources>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
+                        <DataTemplate DataType="{x:Type pd:PortableDeviceFolder}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/resources/folder.png" Height="20" Width="20" Margin="0,0,5,0" />
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type pd:PortableDeviceFile}">
+                            <StackPanel  Orientation="Horizontal">
+                                <Image Source="/resources/file.png" Height="20" Width="20" Margin="0,0,5,0"  />
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
+                    </ListView.Resources>
                 </ListView>
             </Grid>
             <Grid Grid.Row="2">

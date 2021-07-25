@@ -63,7 +63,6 @@ namespace PortableDevices.WPF
         {
             folderHistory = new Stack<PortableDeviceFolder>();
             Devices = new ObservablePortableDeviceCollection();
-            DataContext = this;
             InitializeComponent();
             Loaded += MainWindow_Loaded;
         }
@@ -140,21 +139,18 @@ namespace PortableDevices.WPF
         
         private void UpdateFilesInCurrentFolder()
         {
+            FileListView.ItemsSource = null; // hack as Files in PortableFolder is not observable - this forces a refresh of the list
             SelectedDevice.Connect();
-            SelectedDevice.GetFiles(CurrentFolder);
+            CurrentFolder = SelectedDevice.GetFiles(CurrentFolder);
             if (null != CurrentFolder)
             {
                 if (folderHistory.Any()
-                    && folderHistory.Peek() == CurrentFolder)
-                {
-                    CurrentFolder = null;
-                    CurrentFolder = folderHistory.Peek();
-                }
-                else
+                    && folderHistory.Peek() != CurrentFolder)
                 {
                     folderHistory.Push(CurrentFolder);
                 }
             }
+            FileListView.ItemsSource = CurrentFolder.Files;
         }
 
     }

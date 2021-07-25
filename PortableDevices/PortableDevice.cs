@@ -107,7 +107,7 @@ namespace PortableDevices
             }
         }
 
-        public void GetFiles(PortableDeviceFolder folder)
+        public PortableDeviceFolder GetFiles(PortableDeviceFolder folder)
         {
             IPortableDeviceContent content = GetContents();
             if (null == folder)
@@ -115,6 +115,7 @@ namespace PortableDevices
                 folder = Root;
             }
             PortableDeviceFolder.EnumerateContents(ref content, folder);
+            return folder;
         }
 
 
