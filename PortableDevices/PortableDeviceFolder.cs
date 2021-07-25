@@ -259,16 +259,16 @@ namespace PortableDevices
         /**
          * Enumerate the contents of the folder.
          */
-        public static void EnumerateContents(ref IPortableDeviceContent content, PortableDeviceFolder parent)
+        public static void EnumerateContents(ref IPortableDeviceContent content, PortableDeviceFolder folder)
         {
-            parent.Files.Clear();
+            folder.Files.Clear();
             // Get the properties of the object
             IPortableDeviceProperties properties;
             content.Properties(out properties);
 
             // Enumerate the items contained by the current object
             IEnumPortableDeviceObjectIDs objectIds;
-            content.EnumObjects(0, parent.Id, null, out objectIds);
+            content.EnumObjects(0, folder.Id, null, out objectIds);
 
             uint fetched = 0;
             do
@@ -280,7 +280,7 @@ namespace PortableDevices
                 {
                     var currentObject = WrapObject(properties, objectId);
 
-                    parent.Files.Add(currentObject);
+                    folder.Files.Add(currentObject);
                 }
             } while (fetched > 0);
         }
