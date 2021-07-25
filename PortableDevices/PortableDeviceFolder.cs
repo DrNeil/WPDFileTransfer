@@ -9,9 +9,11 @@ namespace PortableDevices
 {
     public class PortableDeviceFolder : PortableDeviceObject
     {
-        public PortableDeviceFolder(string id, string name) : base(id, name)
+        public bool ReadOnly { get; set; }
+        public PortableDeviceFolder(string id, string name, bool readOnly = false) : base(id, name)
         {
             this.Files = new List<PortableDeviceObject>();
+            ReadOnly = readOnly;
         }
 
         public IList<PortableDeviceObject> Files { get; private set; }
@@ -310,7 +312,7 @@ namespace PortableDevices
                 catch (Exception) { name = "Unknown"; }
             }
 
-
+            // for future this might be useful https://github.com/slowmonkey/WPD-.NET-Wrapper/commit/3cc9c823bab34c34ff71e564c30535d953a8bb14
             // Get the type of the object
             Guid contentType;
             property = new _tagpropertykey();
@@ -323,6 +325,19 @@ namespace PortableDevices
 
             if (contentType == folderType || contentType == functionalType)
             {
+                // Apple devices do not support this property
+                //int canDelete = 0;
+                //try
+                //{
+                //    property = new _tagpropertykey();
+                //    property.fmtid = new Guid(0xEF6B490D, 0x5CD8, 0x437A, 0xAF, 0xFC, 0xDA, 0x8B, 0x60, 0xEE, 0x4A, 0x3C);
+                //    property.pid = 26;
+                //    values.GetBoolValue(property, out canDelete);
+                //}
+                //catch(Exception ex)
+                //{
+                //    Debug.WriteLine(ex);
+                //}
                 return new PortableDeviceFolder(objectId, name);
             }
 

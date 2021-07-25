@@ -144,8 +144,14 @@ namespace PortableDevices.WPF
             CurrentFolder = SelectedDevice.GetFiles(CurrentFolder);
             if (null != CurrentFolder)
             {
-                if (folderHistory.Any()
-                    && folderHistory.Peek() != CurrentFolder)
+                if (folderHistory.Any())
+                {
+                    if (folderHistory.Peek() != CurrentFolder)
+                    {
+                        folderHistory.Push(CurrentFolder);
+                    }
+                }
+                else
                 {
                     folderHistory.Push(CurrentFolder);
                 }

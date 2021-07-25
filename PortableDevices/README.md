@@ -1,5 +1,6 @@
 # WPDFileTransfer
-Copy files to/from your pc/phone using c#
+Copy files to/from your PC/phone using c#
+This will work for other portable devices such as SD cards
 
 Windows Portable Device file transfer
 
@@ -21,8 +22,8 @@ https://cgeers.wordpress.com/2012/04/15/wpd-deleting-resources/
 
 https://cgeers.wordpress.com/2012/04/17/wpd-transfer-content-to-a-device/
 
-The file Program.cs does a simple task of either copying a folder to/from the phone from your pc
-or  copying a file to/from the phone from your pc.
+The file Program.cs does a simple task of either copying a folder to/from the phone from your PC
+or  copying a file to/from the phone from your PC.
 
 See the top of that file for instructions.
 
@@ -33,9 +34,12 @@ The files that you may want to use in your project to copy to/from a phone are:
    PortableDeviceFile.cs
    PortableDeviceFolder.cs
    PortableDeviceObject.cs
+      
+
+   In Addition there is a WPF UI that can be run that presents the devices found, and the folders and files of a selected device.
+   The WPF UI allows you to download and upload files to the selected folder.
 
    Enjoy!
-
-   :) Pete
+   :) Pete + Neil
 
 
