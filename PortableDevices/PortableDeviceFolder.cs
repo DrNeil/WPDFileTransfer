@@ -312,7 +312,8 @@ namespace PortableDevices
                 catch (Exception) { name = "Unknown"; }
             }
 
-            // for future this might be useful https://github.com/slowmonkey/WPD-.NET-Wrapper/commit/3cc9c823bab34c34ff71e564c30535d953a8bb14
+            // for future this might be useful for other file types
+            // https://github.com/slowmonkey/WPD-.NET-Wrapper/commit/3cc9c823bab34c34ff71e564c30535d953a8bb14
             // Get the type of the object
             Guid contentType;
             property = new _tagpropertykey();
@@ -322,6 +323,10 @@ namespace PortableDevices
 
             var folderType = new Guid(0x27E2E392, 0xA111, 0x48E0, 0xAB, 0x0C, 0xE1, 0x77, 0x05, 0xA0, 0x5F, 0x85);
             var functionalType = new Guid(0x99ED0160, 0x17FF, 0x4C44, 0x9D, 0x98, 0x1D, 0x7A, 0x6F, 0x94, 0x19, 0x21);
+            var imageFileType = new Guid("EF2107D5-A52A-4243-A26B-62D4176D7603");
+            var movieFileType = new Guid("9261B03C-3D78-4519-85E3-02C5E1F50BB9");
+            var documentFileType = new Guid("680ADF52-950A-4041-9B41-65E393648155");
+            var genericFileType = new Guid("0085E0A6-8D34-45D7-BC5C-447E59C73D48");
 
             if (contentType == folderType || contentType == functionalType)
             {
@@ -341,6 +346,25 @@ namespace PortableDevices
                 return new PortableDeviceFolder(objectId, name);
             }
 
+            PortableDeviceFile.FileType type = PortableDeviceFile.FileType.Unknown;
+            if (contentType == imageFileType)
+            {
+                type = PortableDeviceFile.FileType.Image;
+            }
+            else if (contentType == movieFileType)
+            {
+                type = PortableDeviceFile.FileType.Movie;
+            }
+            else if (contentType == documentFileType)
+            {
+                type = PortableDeviceFile.FileType.Document;
+            }
+            else if (contentType == genericFileType)
+            {
+                type = PortableDeviceFile.FileType.GenericFile;
+            }
+
+
             // Get the size of the object
             long objSiz;
             property = new _tagpropertykey();
@@ -348,7 +372,9 @@ namespace PortableDevices
             property.pid = 11; //WPD_OBJECT_SIZE;
             values.GetSignedLargeIntegerValue(property, out objSiz);
 
-            return new PortableDeviceFile(objectId, name, objSiz);
+
+
+            return new PortableDeviceFile(objectId, name, objSiz, type);
         }
 
         /**
